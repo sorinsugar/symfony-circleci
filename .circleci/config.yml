@@ -40,34 +40,36 @@ jobs:
           paths:
             - ./vendor
 
-      # Get new repo
-      - run:
-          name: Get deploy-trigger project
-          command: |
-            cd ~
-            git clone git@github.com:sorinsugar/DCSRatingBundle.git
-            ls -al
-
       # Persist project data
       - persist_to_workspace:
           root: ~/
           paths:
             - symfony-circleci
-            - DCSRatingBundle
 
   tests:
     <<: *defaults
     parallelism: 1
     steps:
-#      - attach_workspace:
-#          at: ~/
+      - attach_workspace:
+          at: ~/
+
+      # Get new repo
       - run:
-          name: Test location
+          name: Get deploy-trigger project
           command: |
-            pwd
-            ls -al
-            ls -al ~
-            docker-compose --help
+            cd ~
+            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
+
+      - run:
+          name: Spin up docker-compose
+          command: |
+            cd ~/symfony-circleci-compose
+            docker-compose up -d
+
+       - run:
+          name: Run migrations
+          commnad: bin/console doctrine:migrations:migrate
+
 
 workflows:
   version: 2
