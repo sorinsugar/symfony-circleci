@@ -36,7 +36,7 @@ jobs:
           paths:
             - ./vendor
 
-       Persist project data
+      # Persist project data
       - persist_to_workspace:
           root: ~/
           paths:
