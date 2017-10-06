@@ -15,8 +15,8 @@ defaults: &defaults
       environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: symfonydemo
-        MYSQL_USER: root
-        MYSQL_PASSWORD: root
+        MYSQL_USER: symfony
+        MYSQL_PASSWORD: symfony
 
 jobs:
 
