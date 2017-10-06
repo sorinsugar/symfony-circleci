@@ -11,6 +11,10 @@ jobs:
     <<: *defaults
     parallelism: 1
     steps:
+      - run:
+          name: Check php verison and data
+          command: php -i
+
       - checkout
 
       - run:
