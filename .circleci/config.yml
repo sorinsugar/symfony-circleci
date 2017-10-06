@@ -78,14 +78,6 @@ jobs:
             sudo apt-get install -y mysql-client
 
       - run:
-          name: Check mysql connection
-          command: mysql -u $DB_USER -p$DB_PASS -h $DB_HOST $DB_NAME -e "show databases;"
-
-      - run:
-          name: Check mysql connection
-          command: sleep 30s
-
-      - run:
           name: Run migrations
           command: php bin/console -n doctrine:migrations:migrate
 
