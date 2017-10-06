@@ -52,6 +52,10 @@ jobs:
           paths:
             - ./vendor
 
+      - run:
+          name: Copy parameters.yml
+          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
+
       # Persist project data
       - persist_to_workspace:
           root: ~/
@@ -75,6 +79,8 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y mysql-client
+
+
 
       - run:
           name: Import database schema and fixtures
