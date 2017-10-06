@@ -71,6 +71,10 @@ jobs:
             docker-compose up -d
 
       - run:
+          name: Check project structure
+          command: ls -al
+
+      - run:
           name: Run migrations
           command: bin/console doctrine:migrations:migrate
 
