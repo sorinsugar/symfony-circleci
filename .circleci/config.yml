@@ -1,7 +1,7 @@
 version: 2
 
 defaults: &defaults
-  working_directory: ~/hatch-api
+  working_directory: ~/symfony-circleci
   docker:
     - image: circleci/php:7.0-fpm-browsers
 
@@ -33,15 +33,21 @@ jobs:
 
       - run:
           command: composer self-update
+
+      # Download and cache dependencies
       - restore_cache:
           keys:
-            - composer-{{ checksum "composer.json" }}
+            - v1-vendors-{{ checksum "composer.json" }}
+            - v1-vendors-
+
       - run: composer install -n --prefer-dist
+
       - save_cache:
           key: composer-v1-{{ checksum "composer.json" }}
           paths:
-            - vendor
+            - ./vendor
 
+      # Get new repo
       - run:
           name: Get deploy-trigger project
           command: |
@@ -49,10 +55,12 @@ jobs:
             git clone git@github.com:sorinsugar/DCSRatingBundle.git
             ls -al
 
+      # Persist project data
       - persist_to_workspace:
           root: ~
           paths:
             - symfony-circleci
+            - DCSRatingBundle
 
   tests:
     <<: *defaults
