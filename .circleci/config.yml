@@ -88,10 +88,6 @@ jobs:
             cat app/config/parameters.yml
 
       - run:
-          name: Import database schema and fixtures
-          command: bin/console doctrine:database:create
-
-      - run:
           name: Run migrations
           command: bin/console doctrine:migrations:migrate
 
