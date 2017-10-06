@@ -57,6 +57,7 @@ jobs:
       - run:
           name: Get deploy-trigger project
           command: |
+            ssh-keyscan -H github.com >> ~/.ssh/known_hosts
             cd ~
             git clone git@github.com:sorinsugar/symfony-circleci-compose.git
 
