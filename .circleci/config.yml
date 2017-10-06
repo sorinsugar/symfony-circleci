@@ -77,12 +77,8 @@ jobs:
             sudo apt-get install -y mysql-client
 
       - run:
-          name: Check project structure
-          command: ls -al
-
-      - run:
-          name: Check project structure
-          command: ls -al
+          name: Import database schema and fixtures
+          command: bin/console doctrine:database:create
 
       - run:
           name: Run migrations
