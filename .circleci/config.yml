@@ -40,7 +40,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - symfony-circleci/vendors
+            - symfony-circleci
             - .ssh
 
   tests:
@@ -51,15 +51,6 @@ jobs:
           at: ~/
 
       - setup_remote_docker
-
-      - restore_cache:
-          keys:
-            - v1-vendors-{{ checksum "composer.json" }}
-            - v1-vendors-
-
-      - run:
-          name: Add CircleCI parameter.yml file
-          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
 
       - run:
           name: Check project structure
@@ -76,12 +67,16 @@ jobs:
           name: Spin up docker-compose
           command: |
             cd ~/symfony-circleci-compose
+            docker-compose pull
             docker-compose up -d
 
       - run:
           name: Run migrations
           command: bin/console doctrine:migrations:migrate
 
+      - run:
+          name: Run tests
+          command: vendor
 
 workflows:
   version: 2
