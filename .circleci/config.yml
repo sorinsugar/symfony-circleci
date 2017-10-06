@@ -10,7 +10,7 @@ workspace_root: &workspace_root
 
 attach_workspace: &attach_workspace
   - attach_workspace:
-      at: *workspace_root
+      at: ~/
 
 jobs:
 
@@ -136,8 +136,7 @@ jobs:
 
 workflows:
   version: 2
-
-  rosetta:
+  build-and-deploy:
     jobs:
       - setup
       - tests:
