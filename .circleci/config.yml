@@ -81,10 +81,6 @@ jobs:
           command: |
             sudo docker-php-ext-install pdo_mysql
 
-#      - run:
-#          name: Run migrations
-#          command: php bin/console -n doctrine:schema:create
-
       - run:
           name: Sleep
           command: sleep 30s
