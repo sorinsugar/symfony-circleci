@@ -59,13 +59,15 @@ jobs:
     <<: *defaults
     parallelism: 1
     steps:
-      - attach_workspace:
-          at: ~/
+#      - attach_workspace:
+#          at: ~/
       - run:
           name: Test location
           command: |
             pwd
             ls -al
+            ls -al ~
+            docker-compose --help
 
 workflows:
   version: 2
