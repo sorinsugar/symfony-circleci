@@ -9,8 +9,8 @@ workspace_root: &workspace_root
     ~
 
 attach_workspace: &attach_workspace
-  attach_workspace:
-    at: *workspace_root
+  - attach_workspace:
+      at: *workspace_root
 
 jobs:
 
