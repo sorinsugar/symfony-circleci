@@ -22,7 +22,7 @@ jobs:
 
       - run:
           name: Add CircleCI parameter.yml file
-          command: cp circleci/parameters.yml.dist app/config/parameters.yml
+          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
 
       - run:
           command: composer self-update
