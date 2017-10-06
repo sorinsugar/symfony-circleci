@@ -50,7 +50,7 @@ jobs:
 
       # Persist project data
       - persist_to_workspace:
-          root: ~
+          root: ~/
           paths:
             - symfony-circleci
             - DCSRatingBundle
