@@ -86,7 +86,7 @@ jobs:
 
       - run:
           name: Mysql check
-          command: mysql -u root -p root -h 127.0.0.1
+          command: mysql -u root -proot -h 127.0.0.1
 
       - run:
           name: Check project structure
