@@ -33,7 +33,6 @@ jobs:
           name: Run composer self-update
           command: sudo composer self-update
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-vendors-{{ checksum "composer.json" }}
