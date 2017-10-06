@@ -9,8 +9,9 @@ defaults: &defaults
         DB_USER: root
         DB_PASS: root
         DB_PORT: 3306
-        DB_HOST: 127.0.0.1
+        DB_HOST: database
     - image: circleci/mysql:5.6-ram
+      name: database
       environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: symfonydemo
@@ -100,7 +101,7 @@ jobs:
 
       - run:
           name: Mysql check
-          command: mysql -u root -proot -h 127.0.0.1
+          command: mysql -u root -proot -h database
 
       - run:
           name: Check project structure
@@ -119,6 +120,6 @@ workflows:
   build-and-deploy:
     jobs:
       - setup
-      - tests:
-          requires:
-            - setup
+#      - tests:
+#          requires:
+#            - setup
