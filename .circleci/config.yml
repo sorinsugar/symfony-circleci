@@ -79,18 +79,11 @@ jobs:
 
       - run:
           name: Check mysql connection
-          command: |
-            pwd
-            cat app/config/parameters.yml
-            printenv
-
-      - run:
-          name: Run migrations
-          command: php bin/console debug:container --parameters
+          command: mysql -u $DB_USER -p$DB_PASS -h $DB_HOST $DB_NAME -e "show databases;"
 
       - run:
           name: Check mysql connection
-          command: mysql -u $DB_USER -p$DB_PASS -h $DB_HOST $DB_NAME -e "show databases;"
+          command: sleep 30s
 
       - run:
           name: Run migrations
