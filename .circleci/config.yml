@@ -57,9 +57,8 @@ jobs:
       - run:
           name: Get deploy-trigger project
           command: |
-            ssh-keyscan -H github.com >> ~/.ssh/known_hosts
             cd ~
-            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
+            git clone git@github.com:sorinsugar/symfony-circleci-compose.git -y
 
       - run:
           name: Spin up docker-compose
