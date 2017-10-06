@@ -10,16 +10,13 @@ defaults: &tests
   docker:
     - image: circleci/php:7.0-fpm-browsers
       environment:
-        DB_NAME: symfonydemo
+        DB_NAME: financial_plan
         DB_USER: root
-        DB_PASS: root
+        DB_PASSWORD: root
         DB_PORT: 3306
-        DB_HOST: symfonydemo
-    - image: circleci/mysql:5.7-ram
-      name: symfonydemo
-      environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: symfonydemo
+        DB_HOST: db
+    - image: vouchedfor/main-db-sanitized-prod:latest
+      name: db
 
 jobs:
 
@@ -28,6 +25,12 @@ jobs:
     parallelism: 1
     steps:
       - checkout
+
+      - run:
+          name: Clone Hatch-API
+          command: |
+            rm -rf *
+            git clone git@github.com:vouchedfor/hatch-api.git .
 
       - run:
           name: Run composer self-update
@@ -49,7 +52,11 @@ jobs:
 
       - run:
           name: Copy parameters.yml
-          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
+          command: cp app/config/parameters.yml.dist app/config/parameters.yml
+
+      - run:
+          name: Check if symfony is ok
+          command: php bin/symfony_requirements
 
       # Persist project data
       - persist_to_workspace:
@@ -67,7 +74,7 @@ jobs:
 
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://symfonydemo:3306 -timeout 1m
+          command: dockerize -wait tcp://db:3306 -timeout 1m
 
       - run:
           name: Install mysql client
