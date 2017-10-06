@@ -56,7 +56,7 @@ jobs:
       # Add github fingerprint
       - add-ssh-keys:
           fingerprints:
-            - 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+            - c3:5f:44:56:e5:e5:37:cb:3a:d9:9a:46:a5:03:d8:9f
 
       # Get new repo
       - run:
