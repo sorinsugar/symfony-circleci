@@ -17,6 +17,9 @@ defaults: &tests
         DB_HOST: db
     - image: vouchedfor/main-db-sanitized-prod:latest
       name: db
+      auth:
+        username: $DOCKER_USER
+        password: $DOCKER_PASS
 
 jobs:
 
