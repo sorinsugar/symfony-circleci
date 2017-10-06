@@ -73,9 +73,9 @@ jobs:
       - run:
           name: Install mysql client and php extension
           command: |
+            sudo docker-php-ext-install pdo_mysql
             sudo apt-get update
             sudo apt-get install -y mysql-client
-            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Check mysql connection
