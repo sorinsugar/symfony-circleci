@@ -13,12 +13,12 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install docker-compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+#      - run:
+#          name: Install docker-compose
+#          command: |
+#            curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+#            chmod +x ~/docker-compose
+#            sudo mv ~/docker-compose /usr/local/bin/docker-compose
 
       - run:
           command: sudo composer self-update
@@ -54,6 +54,10 @@ jobs:
           name: Install PHP extensions
           command: sudo docker-php-ext-install pdo_mysql
 
+      - run:
+          name: Install Mysql
+          command: apt-get update && apt-get install -y mysql-client && rm -rf /var/lib/apt
+
       - setup_remote_docker
 
       - run:
@@ -73,6 +77,10 @@ jobs:
             cd ~/symfony-circleci-compose
             docker-compose pull
             docker-compose up -d
+
+      - run:
+          name: Check hosts
+          command: cat /etc/hosts
 
       - run:
           name: Mysql check
