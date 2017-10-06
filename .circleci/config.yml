@@ -25,7 +25,7 @@ jobs:
           command: cp .circleci/parameters.yml.dist app/config/parameters.yml
 
       - run:
-          command: composer self-update
+          command: sudo composer self-update
 
       # Download and cache dependencies
       - restore_cache:
