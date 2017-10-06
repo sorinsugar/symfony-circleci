@@ -80,7 +80,12 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y mysql-client
 
-
+      - run:
+          name: Check data app/config
+          command: |
+            ls -al app/config
+            printenv
+            cat parameters.yml
 
       - run:
           name: Import database schema and fixtures
