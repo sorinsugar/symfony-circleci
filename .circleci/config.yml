@@ -83,7 +83,7 @@ jobs:
 
       - run:
           name: Run migrations
-          command: php bin/console -n doctrine:migrations:migrate
+          command: php bin/console -n -vvv doctrine:migrations:migrate
 
       - run:
           name: Run phpunit tests
