@@ -9,7 +9,7 @@ defaults: &defaults
         DB_USER: root
         DB_PASS: root
         DB_PORT: 3306
-        DB_HOST: database
+        DB_HOST: db
     - image: vouchedfor/db:latest
       name: db
       auth:
