@@ -4,6 +4,18 @@ defaults: &defaults
   working_directory: ~/symfony-circleci
   docker:
     - image: circleci/php:7.0-fpm-browsers
+      environment:
+        DB_NAME: symfonydemo
+        DB_USER: root
+        DB_PASS: root
+        DB_PORT: 3306
+        DB_HOST: 127.0.0.1
+    - image: mysql:5.7
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: symfonydemo
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
 
 jobs:
 
@@ -60,29 +72,31 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y mysql-client
 
-      - setup_remote_docker
-
       - run:
           name: Check project structure
           command: ls -al
 
       # Get new repo
-      - run:
-          name: Get deploy-trigger project
-          command: |
-            cd ~
-            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
+#      - run:
+#          name: Get deploy-trigger project
+#          command: |
+#            cd ~
+#            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
 
-      - run:
-          name: Spin up docker-compose
-          command: |
-            cd ~/symfony-circleci-compose
-            docker-compose pull
-            docker-compose up -d
+#      - run:
+#          name: Spin up docker-compose
+#          command: |
+#            cd ~/symfony-circleci-compose
+#            docker-compose pull
+#            docker-compose up -d
 
       - run:
           name: Check hosts
           command: cat /etc/hosts
+
+      - run:
+          name: Print env
+          command: printenv
 
       - run:
           name: Mysql check
@@ -96,9 +110,9 @@ jobs:
           name: Run migrations
           command: bin/console doctrine:migrations:migrate
 
-      - run:
-          name: Run tests
-          command: vendor
+#      - run:
+#          name: Run tests
+#          command: vendor
 
 workflows:
   version: 2
