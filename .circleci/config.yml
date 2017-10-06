@@ -86,7 +86,7 @@ jobs:
 
       - run:
           name: Db test
-          command: mysql -u $DB_USER -p$DB_PASSWORD -h$DB_HOST financial_plans -e "show tables;"
+          command: mysql -u $DB_USER -p$DB_PASSWORD -h$DB_HOST financial_plan -e "show tables;"
 
       - run:
           name: Run migrations
