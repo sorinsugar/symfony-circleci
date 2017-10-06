@@ -12,6 +12,7 @@ defaults: &defaults
         DB_HOST: 127.0.0.1
     - image: mysql:5.7
       environment:
+        MYSQL_ROOT_HOST: %
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: symfonydemo
         MYSQL_USER: root
@@ -61,6 +62,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+
+      -
 
       - run:
           name: Install PHP extensions
