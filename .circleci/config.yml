@@ -1,34 +1,39 @@
 version: 2
 
-working_directory: &working_directory
+defaults: &setup
   working_directory: ~/symfony-circleci
+  docker:
+    - image: circleci/php:7.0-fpm-browsers
+      environment:
+        DB_NAME: symfonydemo
+        DB_USER: root
+        DB_PASS: root
+        DB_PORT: 3306
+        DB_HOST: db
 
-baseimage: &baseimage
-  - image: circleci/php:7.0-fpm-browsers
-    environment:
-      DB_NAME: symfonydemo
-      DB_USER: root
-      DB_PASS: root
-      DB_PORT: 3306
-      DB_HOST: db
-
-database: &database
-  - image: vouchedfor/db:latest
-    name: db
-    auth:
-      username: sorinsugar
-      password: temppass
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: symfonydemo
+defaults: &tests
+  working_directory: ~/symfony-circleci
+  docker:
+    - image: circleci/php:7.0-fpm-browsers
+      environment:
+        DB_NAME: symfonydemo
+        DB_USER: root
+        DB_PASS: root
+        DB_PORT: 3306
+        DB_HOST: db
+    - image: vouchedfor/db:latest
+      name: db
+      auth:
+        username: sorinsugar
+        password: temppass
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: symfonydemo
 
 jobs:
 
   setup:
-    defaults:
-      <<: *working_directory
-      docker:
-        <<: *baseimage
+    <<: *setup
     parallelism: 1
     steps:
       - checkout
@@ -64,11 +69,7 @@ jobs:
             - .ssh
 
   tests:
-    defaults:
-      <<: *working_directory
-      docker:
-        <<: *baseimage
-        <<: *database
+    <<: *tests
     parallelism: 1
     steps:
       - attach_workspace:
