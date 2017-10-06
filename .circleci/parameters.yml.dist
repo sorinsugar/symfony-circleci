@@ -1,16 +1,16 @@
 # This file is auto-generated during the composer install
 parameters:
     database_driver: pdo_mysql
-    database_host: symfonydemo
-    database_user: root
-    database_password: root
-    database_port: 3306
-    database_name: symfonydemo
+    database_host: '%env(DB_HOST)%'
+    database_user: '%env(DB_USER)%'
+    database_password: '%env(DB_PASSWORD)%'
+    database_port: '%env(DB_PORT)%'
+    database_name: '%env(DB_NAME)%'
     env(DB_HOST): symfonydemo
     env(DB_USER): root
     env(DB_PASSWORD): root
     env(DB_PORT): 3306
-    env(DB_NAME): symfony
+    env(DB_NAME): symfonydemo
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
