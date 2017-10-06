@@ -10,13 +10,11 @@ defaults: &defaults
         DB_PASS: root
         DB_PORT: 3306
         DB_HOST: database
-    - image: circleci/mysql:5.6-ram
-      name: database
+    - image: vouchedfor/db:latest
+      name: db
       environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: symfonydemo
-        MYSQL_USER: symfony
-        MYSQL_PASSWORD: symfony
 
 jobs:
 
@@ -111,15 +109,15 @@ jobs:
           name: Run migrations
           command: bin/console doctrine:migrations:migrate
 
-#      - run:
-#          name: Run tests
-#          command: vendor
+      - run:
+          name: Run tests
+          command: vendor/phpunit/phpunit/phpunit
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - setup
-#      - tests:
-#          requires:
-#            - setup
+      - tests:
+          requires:
+            - setup
