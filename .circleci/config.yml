@@ -11,10 +11,6 @@ jobs:
     <<: *defaults
     parallelism: 1
     steps:
-      - run:
-          name: Check php verison and data
-          command: php -i
-
       - checkout
 
       - run:
@@ -53,6 +49,10 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+
+      - run:
+          name: Install PHP extensions
+          command: sudo docker-php-ext-install pdo_mysql
 
       - setup_remote_docker
 
