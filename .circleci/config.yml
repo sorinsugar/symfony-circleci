@@ -71,11 +71,15 @@ jobs:
           command: dockerize -wait tcp://symfonydemo:3306 -timeout 1m
 
       - run:
-          name: Install mysql client and php extension
+          name: Install mysql client
           command: |
-            sudo docker-php-ext-install pdo_mysql
             sudo apt-get update
             sudo apt-get install -y mysql-client
+
+      - run:
+          name: Install php mysql extension
+          command: |
+            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Run migrations
