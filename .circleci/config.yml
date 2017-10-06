@@ -27,13 +27,6 @@ jobs:
       - checkout
 
       - run:
-          name: Clone Hatch-API
-          command: |
-            shopt -s dotglob
-            rm -rf *
-            git clone git@github.com:sorinsugar/hatch-api.git .
-
-      - run:
           name: Run composer self-update
           command: sudo composer self-update
 
