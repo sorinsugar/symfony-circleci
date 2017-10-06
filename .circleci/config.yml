@@ -41,17 +41,24 @@ jobs:
             - ./vendor
 
       # Persist project data
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - symfony-circleci
+#      - persist_to_workspace:
+#          root: ~/
+#          paths:
+#            - symfony-circleci
 
   tests:
     <<: *defaults
     parallelism: 1
     steps:
-      - attach_workspace:
-          at: ~/
+#      - attach_workspace:
+#          at: ~/
+
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-vendors-{{ checksum "composer.json" }}
+            - v1-vendors-
 
       # Get new repo
       - run:
