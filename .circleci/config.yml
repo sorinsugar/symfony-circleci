@@ -21,10 +21,6 @@ jobs:
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
 
       - run:
-          name: Add CircleCI parameter.yml file
-          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
-
-      - run:
           command: sudo composer self-update
 
       # Download and cache dependencies
@@ -60,27 +56,30 @@ jobs:
             - v1-vendors-{{ checksum "composer.json" }}
             - v1-vendors-
 
+      - run:
+          name: Add CircleCI parameter.yml file
+          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
+
+      - run:
+          name: Check project structure
+          command: ls -al
+
       # Get new repo
       - run:
           name: Get deploy-trigger project
           command: |
             cd ~
-            ls -al
-#      - run:
-#          name: Get deploy-trigger project
-#          command: |
-#            cd ~
-#            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
+            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
 
-#      - run:
-#          name: Spin up docker-compose
-#          command: |
-#            cd ~/symfony-circleci-compose
-#            docker-compose up -d
-#
-#      - run:
-#          name: Run migrations
-#          command: bin/console doctrine:migrations:migrate
+      - run:
+          name: Spin up docker-compose
+          command: |
+            cd ~/symfony-circleci-compose
+            docker-compose up -d
+
+      - run:
+          name: Run migrations
+          command: bin/console doctrine:migrations:migrate
 
 
 workflows:
