@@ -58,7 +58,7 @@ jobs:
           name: Get deploy-trigger project
           command: |
             cd ~
-            git clone git@github.com:sorinsugar/symfony-circleci-compose.git -y
+            yes | git clone git@github.com:sorinsugar/symfony-circleci-compose.git
 
       - run:
           name: Spin up docker-compose
