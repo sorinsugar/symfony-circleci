@@ -62,8 +62,6 @@ jobs:
       - attach_workspace:
           at: ~/
 
-      -
-
       - run:
           name: Install PHP extensions
           command: sudo docker-php-ext-install pdo_mysql
