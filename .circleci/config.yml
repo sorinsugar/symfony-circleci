@@ -88,8 +88,8 @@ jobs:
             cat app/config/parameters.yml
 
       - run:
-          name: Run migrations
-          command: bin/console doctrine:migrations:migrate
+          name: Run migrations with no interactions
+          command: bin/console -n doctrine:migrations:migrate
 
       - run:
           name: Run tests
