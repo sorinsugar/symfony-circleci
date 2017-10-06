@@ -68,7 +68,7 @@ jobs:
 
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://symfonydemo:3306 -timeout 10s
+          command: dockerize -wait tcp://symfonydemo:3306 -timeout 1m
 
       - run:
           name: Install mysql client and php extension
