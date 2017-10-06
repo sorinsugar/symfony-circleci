@@ -53,27 +53,27 @@ jobs:
       - attach_workspace:
           at: ~/
 
-      # Add github fingerprint
-      - add-ssh-keys:
-          fingerprints:
-            - c3:5f:44:56:e5:e5:37:cb:3a:d9:9a:46:a5:03:d8:9f
-
       # Get new repo
       - run:
           name: Get deploy-trigger project
           command: |
             cd ~
-            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
+            ls -al
+#      - run:
+#          name: Get deploy-trigger project
+#          command: |
+#            cd ~
+#            git clone git@github.com:sorinsugar/symfony-circleci-compose.git
 
-      - run:
-          name: Spin up docker-compose
-          command: |
-            cd ~/symfony-circleci-compose
-            docker-compose up -d
-
-      - run:
-          name: Run migrations
-          command: bin/console doctrine:migrations:migrate
+#      - run:
+#          name: Spin up docker-compose
+#          command: |
+#            cd ~/symfony-circleci-compose
+#            docker-compose up -d
+#
+#      - run:
+#          name: Run migrations
+#          command: bin/console doctrine:migrations:migrate
 
 
 workflows:
