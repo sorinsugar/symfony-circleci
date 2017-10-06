@@ -1,0 +1,144 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/hatch-api
+  docker:
+    - image: circleci/php:7.0-fpm-browsers
+
+workspace_root: &workspace_root
+    ~
+
+attach_workspace: &attach_workspace
+  attach_workspace:
+    at: *workspace_root
+
+jobs:
+
+  setup:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - checkout
+
+      - run:
+          name: Install docker-compose
+          command: |
+            set -x
+            curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+
+      - run:
+          name: Add CircleCI parameter.yml file
+          command: cp circleci/parameters.yml.dist app/config/parameters.yml
+
+      - run:
+          command: composer self-update
+      - restore_cache:
+          keys:
+            - composer-{{ checksum "composer.json" }}
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.json" }}
+          paths:
+            - vendor
+
+      - run:
+          name: Get deploy-trigger project
+          command: |
+            cd ~
+            git clone git@github.com:sorinsugar/DCSRatingBundle.git
+            ls -al
+
+      - persist_to_workspace:
+          root: ~
+          paths:
+            - symfony-circleci
+
+  tests:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      <<: *attach_workspace
+
+      - run:
+          name: Test location
+          command: |
+            pwd
+            ls -al
+#
+#      - run:
+#          name: Import mysql schema and fixtures
+#          command: |
+#            mysql -u $DB_USER -h $DB_HOST -p$DB_PASS -D $DB_NAME < circleci/financial_plan_schema.sql
+#            mysql -u ubuntu -h 127.0.0.1 -D circle_test < circleci/financial_plan_fixtures.sql
+#            mkdir -p $CIRCLE_TEST_REPORTS/phpunit
+#      - run:
+#          name: Test
+#          command: |
+#            FILES=$(circleci tests glob "src/**/*.{js,jsx,ts,tsx}" "tests/spec/**/*.js" | circleci tests split)
+#            echo $FILES
+#            bin/test --allow-src --lcov --junit --reports-dir=tmp/reports $FILES
+#      - run:
+#          name: Upload code coverage
+#          command: node_modules/.bin/codecov --file=tmp/reports/lcov.info
+#      - store_test_results:
+#          path: tmp/reports
+#
+#  build:
+#    <<: *defaults
+#    parallelism: 5
+#    steps:
+#      <<: *attach_workspace
+#      - run:
+#          name: Build
+#          command: |
+#            FILES=$(circleci tests glob "lib/webpack/bundles/*.js" | circleci tests split)
+#            echo $FILES
+#            bin/build $FILES
+#      - run:
+#          name: Upload
+#          command: bin/upload --version=$CIRCLE_BUILD_NUM
+#      - run:
+#          name: Verify
+#          command: |
+#            FILES=$(circleci tests glob "lib/webpack/bundles/*.js" | circleci tests split)
+#            echo $FILES
+#            bin/verify --bundles $FILES
+#      - store_artifacts:
+#          destination: rosetta
+#          path: tmp/
+#
+#  deploy:
+#    <<: *defaults
+#    parallelism: 1
+#    steps:
+#      <<: *attach_workspace
+#      - run:
+#          name: Add known hosts for git operations
+#          command: .circleci/configure_ssh
+#      - deploy:
+#          name: Build and upload manifest
+#          command: bin/manifest --version=$CIRCLE_BUILD_NUM
+#      - deploy:
+#          name: Deploy master
+#          command: .circleci/deploy_master
+#      - store_artifacts:
+#            destination: rosetta
+#            path: tmp/
+
+workflows:
+  version: 2
+
+  rosetta:
+    jobs:
+      - setup
+      - tests:
+          requires:
+            - setup
+#      - build:
+#          requires:
+#            - setup
+#      - deploy:
+#          requires:
+#            - tests
+#            - build
