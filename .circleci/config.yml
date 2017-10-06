@@ -12,6 +12,9 @@ defaults: &defaults
         DB_HOST: database
     - image: vouchedfor/db:latest
       name: db
+      auth:
+        username: sorinsugar
+        password: temppass
       environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: symfonydemo
