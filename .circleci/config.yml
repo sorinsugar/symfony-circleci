@@ -74,16 +74,6 @@ jobs:
           at: ~/
 
       - run:
-          name: Install PHP extensions
-          command: sudo docker-php-ext-install pdo_mysql
-
-      - run:
-          name: Install Mysql
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y mysql-client
-
-      - run:
           name: Wait for db
           command: dockerize -wait tcp://symfonydemo:3306 -timeout 10s
 
@@ -92,18 +82,61 @@ jobs:
           command: mysql -u $DB_USER -p$DB_PASS -h $DB_HOST $DB_NAME -e "show databases;"
 
       - run:
-          name: Run migrations with no interactions
+          name: Install mysql client and php extension
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y mysql-client
+            sudo docker-php-ext-install pdo_mysql
+
+      - run:
+          name: Run migrations
           command: bin/console -n doctrine:migrations:migrate
 
       - run:
-          name: Run tests
+          name: Run phpunit tests
           command: vendor/phpunit/phpunit/phpunit
+
+  build:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - setup_remote_docker
+
+      - run:
+          name: Build  docker image
+          command: |
+            docker build -t sorinsugar/simfony-circleci:$CIRCLE_SHA1
+            docker tag -f sorinsugar/simfony-circleci:$CIRCLE_SHA1 sorinsugar/simfony-circleci:latest
+
+      - run:
+          name: Push  docker image
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push sorinsugar/simfony-circleci:$CIRCLE_SHA1
 
 workflows:
   version: 2
-  build-and-deploy:
+  build-and-test:
     jobs:
       - setup
+          filters:
+            branches:
+              only:
+                - /.*/
       - tests:
           requires:
             - setup
+          filters:
+            branches:
+              only:
+                - /.*/
+      - build:
+          requires:
+            - tests
+          filters:
+            branches:
+              only:
+                - /master/
