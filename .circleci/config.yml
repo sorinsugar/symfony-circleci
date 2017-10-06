@@ -36,20 +36,20 @@ jobs:
           paths:
             - ./vendor
 
-      # Persist project data
-#      - persist_to_workspace:
-#          root: ~/
-#          paths:
-#            - symfony-circleci
+       Persist project data
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - symfony-circleci/vendors
+            - .ssh
 
   tests:
     <<: *defaults
     parallelism: 1
     steps:
-#      - attach_workspace:
-#          at: ~/
+      - attach_workspace:
+          at: ~/
 
-      - checkout
       - setup_remote_docker
 
       - restore_cache:
