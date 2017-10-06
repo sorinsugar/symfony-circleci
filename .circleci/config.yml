@@ -10,7 +10,7 @@ defaults: &tests
   docker:
     - image: circleci/php:7.0-fpm-browsers
       environment:
-        DB_NAME: financial_plan
+        DB_NAME: symfonydemo
         DB_USER: root
         DB_PASSWORD: root
         DB_PORT: 3306
@@ -49,7 +49,7 @@ jobs:
 
       - run:
           name: Copy parameters.yml
-          command: cp app/config/parameters.yml.dist app/config/parameters.yml
+          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
 
       - run:
           name: Check if symfony is ok
@@ -85,12 +85,16 @@ jobs:
             sudo docker-php-ext-install pdo_mysql
 
       - run:
-          name: Sleep
-          command: sleep 30
+          name: Db test
+          command: mysql -u $DB_USER -p$DB_PASSWORD -h$DB_HOST financial_plans -e "show tables;"
 
       - run:
           name: Run migrations
-          command: php bin/console -n -vvv doctrine:migrations:migrate
+          command: php bin/console -n doctrine:database:create
+
+      - run:
+          name: Run migrations
+          command: php bin/console -n doctrine:migrations:migrate
 
       - run:
           name: Run phpunit tests
