@@ -68,7 +68,7 @@ jobs:
 
       - run:
           name: Run migrations
-          commnad: bin/console doctrine:migrations:migrate
+          command: bin/console doctrine:migrations:migrate
 
 
 workflows:
