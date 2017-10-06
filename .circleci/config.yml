@@ -71,6 +71,10 @@ jobs:
           command: dockerize -wait tcp://symfonydemo:3306 -timeout 1m
 
       - run:
+          name: Docker ps
+          command: docker ps -a
+
+      - run:
           name: Install mysql client
           command: |
             sudo apt-get update
