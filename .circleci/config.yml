@@ -10,7 +10,7 @@ defaults: &tests
   docker:
     - image: circleci/php:7.0-fpm-browsers
       environment:
-        DB_NAME: symfonydemo
+        DB_NAME: symfony
         DB_USER: root
         DB_PASS: root
         DB_PORT: 3306
@@ -60,7 +60,7 @@ jobs:
             - .ssh
 
   tests:
-    <<: *tests
+    <<: *
     parallelism: 1
     steps:
       - attach_workspace:
@@ -80,6 +80,11 @@ jobs:
           name: Install php mysql extension
           command: |
             sudo docker-php-ext-install pdo_mysql
+
+      - run:
+          name: Run migrations
+          command: php bin/console -n doctrine:schema:create
+
 
       - run:
           name: Run migrations
