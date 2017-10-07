@@ -32,11 +32,11 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install mysql client
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y mysql-client dnsutils
+#      - run:
+#          name: Install mysql client
+#          command: |
+#            sudo apt-get update
+#            sudo apt-get install -y mysql-client
 
       - run:
           name: Install php mysql extension
