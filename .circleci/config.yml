@@ -37,7 +37,7 @@ jobs:
           name: Install mysql client
           command: |
             sudo apt-get update
-            sudo apt-get install -y mysql-client dig
+            sudo apt-get install -y mysql-client dnsutils
 
       - run:
           name: Install php mysql extension
