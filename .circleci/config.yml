@@ -69,7 +69,7 @@ jobs:
 
       - run:
           name: Run symfony check
-          command: php web/check.php
+          command: php web/config.php
 
       - run:
           name: Check php modules
