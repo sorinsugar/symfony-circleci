@@ -17,8 +17,9 @@ defaults: &tests
         DB_USER: root
         DB_PASS: root
         DB_PORT: 3306
-        DB_HOST: 127.0.0.1
+        DB_HOST: db
     - image: vouchedfor/main-db-sanitized-prod:latest
+      name: db
       auth:
         username: $DOCKER_USER
         password: $DOCKER_PASS
@@ -36,7 +37,7 @@ jobs:
           name: Install mysql client
           command: |
             sudo apt-get update
-            sudo apt-get install -y mysql-client
+            sudo apt-get install -y mysql-client host
 
       - run:
           name: Install php mysql extension
@@ -82,12 +83,8 @@ jobs:
           command: |
             cat app/config/parameters.yml
             printenv
-
-      - run:
-          name: Check mysql connection
-          command: |
-            mysql -uroot -proot -hlocalhost mysql -e "GRANT ALL ON *.* TO 'root'@'127.0.0.1';"
-            mysql -uroot -proot -hlocalhost mysql -e "FLUSH PRIVILEGES;"
+            export DB_HOST=$(host db)
+            printenv
 
       - run:
           name: See parameters
