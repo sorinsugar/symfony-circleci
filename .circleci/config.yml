@@ -76,7 +76,7 @@ jobs:
 
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          command: dockerize -wait tcp://db:3306 -timeout 1m
 
       - run:
           name: Show params
@@ -87,8 +87,8 @@ jobs:
       - run:
           name: Check mysql connection
           command: |
-            mysql -uroot -proot -hdb -P3306 mysql -e "GRANT ALL ON *.* TO 'root'@'127.0.0.1';"
-            mysql -uroot -proot -hdb -P3306 mysql -e "FLUSH PRIVILEGES;"
+            mysql -uroot -proot -hdb mysql -e "GRANT ALL ON *.* TO 'root'@'127.0.0.1';"
+            mysql -uroot -proot -hdb mysql -e "FLUSH PRIVILEGES;"
 
       - run:
           name: See parameters
