@@ -68,13 +68,12 @@ jobs:
           command: php bin/symfony_requirements
 
       - run:
-          name: Check php modules
-          command: php -m
-
+          name: Run symfony check
+          command: php web/check.php
 
       - run:
-          name: Check database docker IP
-          command: host db
+          name: Check php modules
+          command: php -m
 
       - setup_remote_docker
 
