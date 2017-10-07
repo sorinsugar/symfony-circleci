@@ -1,12 +1,12 @@
 version: 2
 
 defaults: &setup
-  working_directory: ~/symfony-circleci
+  working_directory: /var/www/html/symfony-circleci
   docker:
     - image: vouchedfor/symfony-base
 
 defaults: &tests
-  working_directory: ~/symfony-circleci
+  working_directory: /var/www/html/symfony-circleci
   docker:
     - image: vouchedfor/symfony-base
       auth:
@@ -46,7 +46,7 @@ jobs:
 
       - run:
           name: Run composer self-update
-          command: sudo composer self-update
+          command: composer self-update
 
       - restore_cache:
           keys:
