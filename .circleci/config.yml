@@ -37,7 +37,7 @@ jobs:
           name: Install mysql client
           command: |
             sudo apt-get update
-            sudo apt-get install -y mysql-client host
+            sudo apt-get install -y mysql-client dig
 
       - run:
           name: Install php mysql extension
@@ -82,8 +82,7 @@ jobs:
           name: Show params
           command: |
             cat app/config/parameters.yml
-            printenv
-            export DB_HOST=$(host db)
+            export DB_HOST=$(dig db a +short)
             printenv
 
       - run:
