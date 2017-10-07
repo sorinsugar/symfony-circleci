@@ -31,10 +31,6 @@ jobs:
       - checkout
 
       - run:
-          name: Check php modules
-          command: php -m
-
-      - run:
           name: Install mysql client
           command: |
             sudo apt-get update
@@ -72,7 +68,16 @@ jobs:
           command: php bin/symfony_requirements
 
       - run:
-          name: Run migrations
+          name: Check php modules
+          command: php -m
+
+
+      - run:
+          name: Check database docker IP
+          command: host db
+
+      - run:
+          name: Create database
           command: php bin/console -n doctrine:database:create
 
       - run:
