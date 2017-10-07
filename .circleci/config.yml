@@ -45,6 +45,13 @@ jobs:
 #            sudo docker-php-ext-install pdo_mysql
 
       - run:
+          name: Install composer
+          command: |
+            curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer
+            php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=1.5.2
+            rm -rf /tmp/* /tmp/.htaccess
+
+      - run:
           name: Run composer self-update
           command: composer self-update
 
