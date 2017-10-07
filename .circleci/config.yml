@@ -86,8 +86,8 @@ jobs:
       - run:
           name: Check mysql connection
           command: |
-            mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP mysql -e "GRANT ALL ON *.* TO 'root'@'127.0.0.1';"
-            mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP mysql -e "FLUSH PRIVILEGES;"
+            mysql -uroot -proot -hlocalhost -P3306 mysql -e "GRANT ALL ON *.* TO 'root'@'127.0.0.1';"
+            mysql -uroot -proot -hlocalhost -P3306 mysql -e "FLUSH PRIVILEGES;"
 
       - run:
           name: See parameters
