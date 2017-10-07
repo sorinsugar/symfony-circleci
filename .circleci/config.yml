@@ -9,6 +9,9 @@ defaults: &tests
   working_directory: ~/symfony-circleci
   docker:
     - image: vouchedfor/symfony-base
+      auth:
+        username: $DOCKER_USER
+        password: $DOCKER_PASS
       environment:
         DB_NAME: symfonydemo
         DB_USER: root
