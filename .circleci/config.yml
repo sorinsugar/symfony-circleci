@@ -81,7 +81,6 @@ jobs:
           name: Show params
           command: |
             cat app/config/parameters.yml
-#            export DB_HOST=$(dig db a +short)
             printenv
 
       - run:
