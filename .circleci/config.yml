@@ -76,6 +76,12 @@ jobs:
           name: Check database docker IP
           command: host db
 
+      - setup_remote_docker
+
+      - run:
+          name: Check docker ps
+          command: docker ps -a
+
       - run:
           name: Create database
           command: php bin/console -n doctrine:database:create
