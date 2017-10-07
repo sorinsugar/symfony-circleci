@@ -1,12 +1,12 @@
 version: 2
 
 defaults: &setup
-  working_directory: /var/www/html/symfony-circleci
+  working_directory: ~/symfony-circleci
   docker:
     - image: vouchedfor/symfony-base
 
 defaults: &tests
-  working_directory: /var/www/html/symfony-circleci
+  working_directory: ~/symfony-circleci
   docker:
     - image: circleci/php:7.0-fpm-browsers
 #      auth:
