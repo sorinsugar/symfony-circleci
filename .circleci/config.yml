@@ -32,11 +32,11 @@ jobs:
     steps:
       - checkout
 
-#      - run:
-#          name: Install mysql client
-#          command: |
-#            sudo apt-get update
-#            sudo apt-get install -y mysql-client
+      - run:
+          name: Install mysql client
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y mysql-client
 
       - run:
           name: Install php mysql extension
@@ -84,8 +84,9 @@ jobs:
             printenv
 
       - run:
-          name: See parameters
-          command: cat app/config/parameters.yml
+          name: Check mysql connection
+          command: mysql -u$DB_USER -p$DB_PASS -h$DB_HOST mysql -e "show tables;"
+          command: mysql -u$DB_USER -p$DB_PASS -h$DB_HOST --protocol=TCP mysql -e "show tables;"
 
       - run:
           name: Create database
