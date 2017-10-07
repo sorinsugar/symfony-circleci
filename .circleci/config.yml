@@ -79,7 +79,8 @@ jobs:
 
       - run:
           name: Check mysql connection
-          command: mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP verity -e "show tables;"
+          command: |
+            mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP mysql -e "show tables;"
 
       - run:
           name: See parameters
