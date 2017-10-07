@@ -82,8 +82,8 @@ jobs:
           command: mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP verity -e "show tables;"
 
       - run:
-          name: See hosts
-          command: cat /etc/hosts
+          name: See parameters
+          command: cat app/config/parameters.yml
 
       - run:
           name: Create database
