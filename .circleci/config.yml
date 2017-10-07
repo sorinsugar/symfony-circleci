@@ -8,16 +8,16 @@ defaults: &setup
 defaults: &tests
   working_directory: /var/www/html/symfony-circleci
   docker:
-    - image: vouchedfor/symfony-base
-      auth:
-        username: $DOCKER_USER
-        password: $DOCKER_PASS
+    - image: circleci/php:7.0-fpm-browsers
+#      auth:
+#        username: $DOCKER_USER
+#        password: $DOCKER_PASS
       environment:
         DB_NAME: symfonydemo
         DB_USER: root
         DB_PASSWORD: root
         DB_PORT: 3306
-        DB_HOST: db
+        DB_HOST: 127.0.0.1
     - image: vouchedfor/main-db-sanitized-prod:latest
       name: db
       auth:
@@ -39,17 +39,10 @@ jobs:
 #            sudo apt-get update
 #            sudo apt-get install -y mysql-client
 #
-#      - run:
-#          name: Install php mysql extension
-#          command: |
-#            sudo docker-php-ext-install pdo_mysql
-
       - run:
-          name: Install composer
+          name: Install php mysql extension
           command: |
-            curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer
-            php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=1.5.2
-            rm -rf /tmp/* /tmp/.htaccess
+            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Run composer self-update
@@ -80,12 +73,6 @@ jobs:
       - run:
           name: Check php modules
           command: php -m
-
-#      - setup_remote_docker
-
-#      - run:
-#          name: Check docker ps
-#          command: docker ps -a
 
       - run:
           name: Create database
