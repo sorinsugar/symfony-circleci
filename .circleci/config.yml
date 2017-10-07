@@ -78,9 +78,16 @@ jobs:
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
       - run:
+          name: Show params
+          command: |
+            cat app/config/parameters.yml
+            printenv
+
+      - run:
           name: Check mysql connection
           command: |
-            mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP mysql -e "show tables;"
+            mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP mysql -e "GRANT ALL ON *.* TO 'root'@'127.0.0.1';"
+            mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP mysql -e "FLUSH PRIVILEGES;"
 
       - run:
           name: See parameters
