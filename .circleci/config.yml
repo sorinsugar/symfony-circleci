@@ -79,8 +79,8 @@ jobs:
           command: dockerize -wait tcp://db:3306 -timeout 1m
 
       - run:
-          name: Wait for db
-          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
+          name: See hosts
+          command: cat /etc/hosts
 
       - run:
           name: Create database
