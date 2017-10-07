@@ -3,12 +3,12 @@ version: 2
 defaults: &setup
   working_directory: ~/symfony-circleci
   docker:
-    - image: vouchedfor/symfony-base
+    - image: circleci/php:7.0-fpm-browsers
 
 defaults: &tests
   working_directory: ~/symfony-circleci
   docker:
-    - image: vouchedfor/symfony-base
+    - image: circleci/php:7.0-fpm-browsers
       environment:
         DB_NAME: symfonydemo
         DB_USER: root
@@ -30,16 +30,16 @@ jobs:
     steps:
       - checkout
 
-#      - run:
-#          name: Install mysql client
-#          command: |
-#            sudo apt-get update
-#            sudo apt-get install -y mysql-client
-#
-#      - run:
-#          name: Install php mysql extension
-#          command: |
-#            sudo docker-php-ext-install pdo_mysql
+      - run:
+          name: Install mysql client
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y mysql-client
+
+      - run:
+          name: Install php mysql extension
+          command: |
+            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Run composer self-update
@@ -68,14 +68,18 @@ jobs:
           command: php bin/symfony_requirements
 
       - run:
+          name: Run symfony check
+          command: php web/config.php
+
+      - run:
           name: Check php modules
           command: php -m
 
-#      - setup_remote_docker
+      - setup_remote_docker
 
-#      - run:
-#          name: Check docker ps
-#          command: docker ps -a
+      - run:
+          name: Check docker ps
+          command: docker ps -a
 
       - run:
           name: Create database
