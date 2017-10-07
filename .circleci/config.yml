@@ -32,12 +32,12 @@ jobs:
     steps:
       - checkout
 
-#      - run:
-#          name: Install mysql client
-#          command: |
-#            sudo apt-get update
-#            sudo apt-get install -y mysql-client
-#
+      - run:
+          name: Install mysql client
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y mysql-client
+
       - run:
           name: Install php mysql extension
           command: |
@@ -76,6 +76,10 @@ jobs:
       - run:
           name: Wait for db
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
+
+      - run:
+          name: Check mysql connection
+          command: mysql -uroot -proot -h127.0.0.1 verity -e "show tables;"
 
       - run:
           name: See hosts
