@@ -15,7 +15,7 @@ defaults: &tests
       environment:
         DB_NAME: symfonydemo
         DB_USER: root
-        DB_PASSWORD: root
+        DB_PASS: root
         DB_PORT: 3306
         DB_HOST: 127.0.0.1
     - image: vouchedfor/main-db-sanitized-prod:latest
