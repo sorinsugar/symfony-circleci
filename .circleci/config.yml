@@ -24,10 +24,26 @@ defaults: &tests
 jobs:
 
   setup:
-    <<: *setup
+#    <<: *setup
+    <<: *tests
     parallelism: 1
     steps:
       - checkout
+
+      - run:
+          name: Check php modules
+          command: php -m
+
+      - run:
+          name: Install mysql client
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y mysql-client
+
+      - run:
+          name: Install php mysql extension
+          command: |
+            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Run composer self-update
@@ -55,12 +71,20 @@ jobs:
           name: Check if symfony is ok
           command: php bin/symfony_requirements
 
-      # Persist project data
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - symfony-circleci
-            - .ssh
+      - run:
+          name: Run migrations
+          command: php bin/console -n doctrine:database:create
+
+      - run:
+          name: Run migrations
+          command: php bin/console -n doctrine:migrations:migrate
+
+#      # Persist project data
+#      - persist_to_workspace:
+#          root: ~/
+#          paths:
+#            - symfony-circleci
+#            - .ssh
 
   tests:
     <<: *tests
@@ -130,17 +154,17 @@ workflows:
             branches:
               only:
                 - /.*/
-      - tests:
-          requires:
-            - setup
-          filters:
-            branches:
-              only:
-                - /.*/
-      - build:
-          requires:
-            - tests
-          filters:
-            branches:
-              only:
-                - /master/
+#      - tests:
+#          requires:
+#            - setup
+#          filters:
+#            branches:
+#              only:
+#                - /.*/
+#      - build:
+#          requires:
+#            - tests
+#          filters:
+#            branches:
+#              only:
+#                - /master/
