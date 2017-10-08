@@ -20,9 +20,9 @@ defaults: &tests
 #        password: $DOCKER_PASS
     - image: vouchedfor/main-db-sanitized-prod:latest
       name: database
-#      auth:
-#        username: $DOCKER_USER
-#        password: $DOCKER_PASS
+      auth:
+        username: $DOCKER_USER
+        password: $DOCKER_PASS
 
 jobs:
   setup:
