@@ -19,10 +19,11 @@ defaults: &tests
 #        username: $DOCKER_USER
 #        password: $DOCKER_PASS
     - image: circleci/mysql:5.6
+    - image: vouchedfor/main-db-sanitized-prod
 #      name: database
-#      auth:
-#        username: $DOCKER_USER
-#        password: $DOCKER_PASS
+      auth:
+        username: $DOCKER_USER
+        password: $DOCKER_PASS
 
 jobs:
   setup:
