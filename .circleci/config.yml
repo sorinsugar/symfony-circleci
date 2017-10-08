@@ -87,9 +87,9 @@ jobs:
 #          command: |
 #            mysql -u $DB_USER -p$DB_PASS -h database -P $DB_PORT --protocol=TCP mysql -e "show tables;"
 
-      - run:
-          name: See parameters
-          command: cat app/config/parameters.yml
+#      - run:
+#          name: See parameters
+#          command: cat app/config/parameters.yml
 
 #      - run:
 #          name: Grant access to root on docker mysql IP
