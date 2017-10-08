@@ -79,7 +79,7 @@ jobs:
       - run:
           name: Check mysql user table
           command: |
-            mysql -u root -proot -h localhost mysql -e "SELECT User, Host FROM user;"
+            mysql -u root -proot -h 127.0.0.1 mysql -e "SELECT User, Host FROM user;"
 
 #      - run:
 #          name: Check mysql connection
