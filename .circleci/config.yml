@@ -90,9 +90,11 @@ jobs:
           command: |
             export DB_HOST_IP=$(dig database a +short)
             printenv
-            mysql -u $DB_USER -p$DB_PASS -h data -P $DB_PORT mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'$DB_HOST_IP' identified by '$DB_PASS';"
+            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'$DB_HOST_IP' identified by '$DB_PASS';"
             mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' identified by '$DB_PASS';"
             mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT mysql -e "FLUSH PRIVILEGES;"
+            export DB_HOST=$DB_HOST_IP
+            printenv
 
       - run:
           name: Check mysql connection
