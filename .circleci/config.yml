@@ -88,7 +88,7 @@ jobs:
       - run:
           name: Grant access to root on docker mysql IP
           command: |
-            export DB_HOST-$(dig database a +short)
+            export DB_HOST=$(dig database a +short)
             mysql -u $DB_USER -p$DB_PASS -h data -P $DB_PORT mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'$DB_HOST' identified by '$DB_PASS';"
             mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' identified by '$DB_PASS';"
             mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT mysql -e "FLUSH PRIVILEGES;"
