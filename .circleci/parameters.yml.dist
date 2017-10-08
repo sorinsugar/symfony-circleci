@@ -6,7 +6,7 @@ parameters:
     database_password: '%env(DB_PASS)%'
     database_port: '%env(DB_PORT)%'
     database_name: '%env(DB_NAME)%'
-    env(DB_HOST): 127.0.0.1
+    env(DB_HOST): database
     env(DB_USER): root
     env(DB_PASS): root
     env(DB_PORT): 3306
