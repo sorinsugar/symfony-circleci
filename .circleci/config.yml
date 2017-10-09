@@ -40,12 +40,16 @@ jobs:
             - v1-vendors-
 
       - run:
-          name: Copy parameters.yml
-          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
-
-      - run:
           name: Run composer install
           command: composer install -n --prefer-dist
+
+      - run:
+          name: Copy parameters.yml
+          command: |
+            cat app/config/parameters.yml
+            rm -f app/config/parameters.yml
+            cp .circleci/parameters.yml.dist app/config/parameters.yml
+            cat app/config/parameters.yml
 
       - save_cache:
           key: composer-v1-{{ checksum "composer.json" }}
