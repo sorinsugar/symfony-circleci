@@ -104,9 +104,14 @@ jobs:
 #            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT --protocol=TCP mysql -e "show tables;"
 
       - run:
-          name: Sed a nes line
+          name: Sed a new line
           command: |
             ls -al
+            ls -al vendor
+            ls -al vendor/doctrine
+            ls -al vendor/doctrine/doctrine-bundle
+            ls -al vendor/doctrine/doctrine-bundle/Command
+
             sed -i '' -e "90s/.*/ \$hasPath = isset(\$params['path']);print_r(\$params); /" vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
             cat vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
 
