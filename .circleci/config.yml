@@ -87,7 +87,7 @@ jobs:
 
       - run:
           name: Run migrations
-          command: php bin/console -n doctrine:migrations:create
+          command: php bin/console -n doctrine:database:create
 
       - run:
           name: Run migrations
