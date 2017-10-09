@@ -110,7 +110,8 @@ jobs:
       - run:
           name: Build  docker image
           command: |
-            docker build -t sorinsugar/simfony-circleci:$CIRCLE_SHA1
+            ls -al
+            docker build -t sorinsugar/simfony-circleci:$CIRCLE_SHA1 .
             docker tag -f sorinsugar/simfony-circleci:$CIRCLE_SHA1 sorinsugar/simfony-circleci:latest
 
       - run:
