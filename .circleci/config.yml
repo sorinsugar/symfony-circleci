@@ -46,7 +46,6 @@ jobs:
       - run:
           name: Copy parameters.yml
           command: |
-#            rm -f app/config/parameters.yml
             sudo cp -f .circleci/parameters.yml.dist app/config/parameters.yml
             rm -rf var/cache/*
 
