@@ -86,6 +86,12 @@ jobs:
             sudo docker-php-ext-install pdo_mysql
 
       - run:
+          name: Export password and host
+          command: |
+            export DB_PORT=3306
+            export DB_PASS=root
+
+      - run:
           name: Run migrations
           command: php bin/console -n doctrine:database:create
 
