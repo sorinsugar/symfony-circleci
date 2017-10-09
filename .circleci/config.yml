@@ -1,13 +1,15 @@
 version: 2
 
+# Setup variable
 defaults: &setup
   working_directory: ~/symfony-circleci
   docker:
-    - image: vouchedfor/symfony-base
+    - image: circleci/php:7.0-fpm-browsers
 
+# Tests variable
 defaults: &tests
   environment:
-    DB_NAME: financial_test
+    DB_NAME: somedatabase
     DB_USER: root
     DB_PASS: root
     DB_PORT: 3306
@@ -21,22 +23,12 @@ defaults: &tests
         password: $DOCKER_PASS
 
 jobs:
+
   setup:
     <<: *setup
     parallelism: 1
     steps:
       - checkout
-
-#      - run:
-#          name: Install mysql client
-#          command: |
-#            sudo apt-get update
-#            sudo apt-get install -y mysql-client dnsutils
-
-#      - run:
-#          name: Install php mysql extension
-#          command: |
-#            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Run composer self-update
@@ -60,70 +52,67 @@ jobs:
           paths:
             - ./vendor
 
-#      - run:
-#          name: Check if symfony is ok
-#          command: php bin/symfony_requirements
-#
-#      - run:
-#          name: Check php modules
-#          command: php -m
+      # Persist project data
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - symfony-circleci
+            - .ssh
+
+  tests:
+    <<: *tests
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: ~/
 
       - run:
           name: Wait for db
           command: dockerize -wait tcp://$DB_HOST:3306 -timeout 1m
 
 #      - run:
-#          name: Check mysql user table
+#          name: Install mysql client
 #          command: |
-#            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST --protocol=TCP mysql -e "SELECT User, Host FROM user;"
-
-#      - run:
-#          name: Check mysql connection
-#          command: |
-#            mysql -u $DB_USER -p$DB_PASS -h database -P $DB_PORT --protocol=TCP mysql -e "show tables;"
-
-#      - run:
-#          name: See parameters
-#          command: cat app/config/parameters.yml
-
-#      - run:
-#          name: Grant access to root on docker mysql IP
-#          command: |
-#            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST --protocol=TCP mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'$DB_HOST' identified by '$DB_PASS';"
-#            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST --protocol=TCP mysql -e "FLUSH PRIVILEGES;"
-#            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST --protocol=TCP mysql -e "SELECT User, Host FROM user;"
-
-#      - run:
-#          name: Check mysql connection
-#          command: |
-#            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT --protocol=TCP mysql -e "show tables;"
-
-#      - run:
-#          name: Sed a new line
-#          command: |
-#            ls -al
-#            ls -al vendor
-#            ls -al vendor/doctrine
-#            ls -al vendor/doctrine/doctrine-bundle
-#            ls -al vendor/doctrine/doctrine-bundle/Command
-#
-#            sudo sed -i vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php -e "90s/.*/ \$hasPath = isset(\$params['path']);print_r(\$params); /"
-#            cat vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
+#            sudo apt-get update
+#            sudo apt-get install -y mysql-client
 
       - run:
-          name: Create database
-          command: php bin/console -n -vvv doctrine:database:create
+          name: Install php mysql extension
+          command: |
+            sudo docker-php-ext-install pdo_mysql
+
+      - run:
+          name: Run migrations
+          command: php bin/console -n doctrine:migrations:create
 
       - run:
           name: Run migrations
           command: php bin/console -n doctrine:migrations:migrate
 
-#      # Persist project data
-#      - persist_to_workspace:
-#          root: ~/
-#          paths:
-#            - symfony-circleci
-#            - .ssh
+      - run:
+          name: Run phpunit tests
+          command: vendor/phpunit/phpunit/phpunit
+
+  build:
+    <<: *setup
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - setup_remote_docker
+
+      - run:
+          name: Build  docker image
+          command: |
+            docker build -t sorinsugar/simfony-circleci:$CIRCLE_SHA1
+            docker tag -f sorinsugar/simfony-circleci:$CIRCLE_SHA1 sorinsugar/simfony-circleci:latest
+
+      - run:
+          name: Push  docker image
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push sorinsugar/simfony-circleci:$CIRCLE_SHA1
 
 workflows:
   version: 2
@@ -134,17 +123,17 @@ workflows:
             branches:
               only:
                 - /.*/
-#      - tests:
-#          requires:
-#            - setup
-#          filters:
-#            branches:
-#              only:
-#                - /.*/
-#      - build:
-#          requires:
-#            - tests
-#          filters:
-#            branches:
-#              only:
-#                - /master/
+      - tests:
+          requires:
+            - setup
+          filters:
+            branches:
+              only:
+                - /.*/
+      - build:
+          requires:
+            - tests
+          filters:
+            branches:
+              only:
+                - /master/
