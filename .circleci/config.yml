@@ -86,6 +86,13 @@ jobs:
             sudo docker-php-ext-install pdo_mysql
 
       - run:
+          name: Sed a new line
+          command: |
+            sudo sed -i vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php -e "90s/.*/ \$hasPath = isset(\$params['path']);print_r(\$params); /"
+            cat vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
+
+
+      - run:
           name: Run create database
           command: php bin/console -n doctrine:database:create
 
