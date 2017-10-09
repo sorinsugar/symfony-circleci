@@ -105,7 +105,7 @@ jobs:
 
       - run:
           name: Create database
-          command: php bin/console -n doctrine:database:create
+          command: php bin/console -n -vvv doctrine:database:create
 
       - run:
           name: Run migrations
