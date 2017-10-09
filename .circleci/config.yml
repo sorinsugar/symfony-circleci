@@ -46,10 +46,8 @@ jobs:
       - run:
           name: Copy parameters.yml
           command: |
-            cat app/config/parameters.yml
-            rm -f app/config/parameters.yml
-            cp .circleci/parameters.yml.dist app/config/parameters.yml
-            cat app/config/parameters.yml
+#            rm -f app/config/parameters.yml
+            sudo cp -f .circleci/parameters.yml.dist app/config/parameters.yml
             rm -rf var/cache/*
 
       - save_cache:
@@ -74,12 +72,6 @@ jobs:
       - run:
           name: Wait for db
           command: dockerize -wait tcp://$DB_HOST:3306 -timeout 1m
-
-#      - run:
-#          name: Install mysql client
-#          command: |
-#            sudo apt-get update
-#            sudo apt-get install -y mysql-client
 
       - run:
           name: Install php mysql extension
