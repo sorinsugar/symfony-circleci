@@ -48,7 +48,6 @@ jobs:
           command: |
             cat app/config/parameters.yml
             rm -f app/config/parameters.yml
-            ls -al app/config/
             cp .circleci/parameters.yml.dist app/config/parameters.yml
             cat app/config/parameters.yml
 
@@ -87,16 +86,7 @@ jobs:
             sudo docker-php-ext-install pdo_mysql
 
       - run:
-          name: Sed a new line
-          command: |
-            sudo sed -i vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php -e "90s/.*/ \$hasPath = isset(\$params['path']);print_r(\$params); /"
-            cat vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
-            printenv
-            cat app/config/parameters.yml
-
-
-      - run:
-          name: Run create database
+          name: Run migrations
           command: php bin/console -n doctrine:database:create
 
       - run:
