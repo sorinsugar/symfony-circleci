@@ -1,24 +1,23 @@
 version: 2
 
+# Setup variable
 defaults: &setup
   working_directory: ~/symfony-circleci
   docker:
     - image: vouchedfor/symfony-base
 
+# Tests variable
 defaults: &tests
+  environment:
+    DB_NAME: somedatabase
+    DB_USER: root
+    DB_PASS: root
+    DB_PORT: 3306
+    DB_HOST: 127.0.0.1
   working_directory: ~/symfony-circleci
   docker:
     - image: circleci/php:7.0-fpm-browsers
-#      auth:
-#        username: $DOCKER_USER
-#        password: $DOCKER_PASS
-      environment:
-        DB_NAME: symfonydemo
-        DB_USER: root
-        DB_PASS: root
-        DB_PORT: 3306
-        DB_HOST: 127.0.0.1
-    - image: vouchedfor/main-db-sanitized-prod:latest
+    - image: vouchedfor/main-db-sanitized-prod
       auth:
         username: $DOCKER_USER
         password: $DOCKER_PASS
@@ -26,22 +25,10 @@ defaults: &tests
 jobs:
 
   setup:
-#    <<: *setup
-    <<: *tests
+    <<: *setup
     parallelism: 1
     steps:
       - checkout
-
-      - run:
-          name: Install mysql client
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y mysql-client
-
-      - run:
-          name: Install php mysql extension
-          command: |
-            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Run composer self-update
@@ -53,6 +40,10 @@ jobs:
             - v1-vendors-
 
       - run:
+          name: Copy parameters.yml
+          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
+
+      - run:
           name: Run composer install
           command: composer install -n --prefer-dist
 
@@ -61,45 +52,12 @@ jobs:
           paths:
             - ./vendor
 
-      - run:
-          name: Copy parameters.yml
-          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
-
-      - run:
-          name: Check if symfony is ok
-          command: php bin/symfony_requirements
-
-      - run:
-          name: Check php modules
-          command: php -m
-
-      - run:
-          name: Wait for db
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
-
-      - run:
-          name: Check mysql connection
-          command: |
-            mysql -uroot -proot -h127.0.0.1 -P3306 --protocol=TCP mysql -e "show tables;"
-
-      - run:
-          name: See parameters
-          command: cat app/config/parameters.yml
-
-      - run:
-          name: Create database
-          command: php bin/console -n doctrine:database:create
-
-      - run:
-          name: Run migrations
-          command: php bin/console -n doctrine:migrations:migrate
-
-#      # Persist project data
-#      - persist_to_workspace:
-#          root: ~/
-#          paths:
-#            - symfony-circleci
-#            - .ssh
+      # Persist project data
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - symfony-circleci
+            - .ssh
 
   tests:
     <<: *tests
@@ -110,13 +68,13 @@ jobs:
 
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://db:3306 -timeout 1m
+          command: dockerize -wait tcp://$DB_HOST:3306 -timeout 1m
 
-      - run:
-          name: Install mysql client
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y mysql-client
+#      - run:
+#          name: Install mysql client
+#          command: |
+#            sudo apt-get update
+#            sudo apt-get install -y mysql-client
 
       - run:
           name: Install php mysql extension
@@ -124,12 +82,8 @@ jobs:
             sudo docker-php-ext-install pdo_mysql
 
       - run:
-          name: Db test
-          command: mysql -u $DB_USER -p$DB_PASSWORD -h$DB_HOST financial_plan -e "show tables;"
-
-      - run:
           name: Run migrations
-          command: php bin/console -n doctrine:database:create
+          command: php bin/console -n doctrine:migrations:create
 
       - run:
           name: Run migrations
@@ -169,17 +123,17 @@ workflows:
             branches:
               only:
                 - /.*/
-#      - tests:
-#          requires:
-#            - setup
-#          filters:
-#            branches:
-#              only:
-#                - /.*/
-#      - build:
-#          requires:
-#            - tests
-#          filters:
-#            branches:
-#              only:
-#                - /master/
+      - tests:
+          requires:
+            - setup
+          filters:
+            branches:
+              only:
+                - /.*/
+      - build:
+          requires:
+            - tests
+          filters:
+            branches:
+              only:
+                - /master/

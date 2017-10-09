@@ -7,7 +7,7 @@ defaults: &setup
 
 defaults: &tests
   environment:
-    DB_NAME: symfonydemo
+    DB_NAME: financial_test
     DB_USER: root
     DB_PASS: root
     DB_PORT: 3306
@@ -15,37 +15,28 @@ defaults: &tests
   working_directory: ~/symfony-circleci
   docker:
     - image: circleci/php:7.0-fpm-browsers
-#      auth:
-#        username: $DOCKER_USER
-#        password: $DOCKER_PASS
-#    - image: circleci/mysql:5.6
     - image: vouchedfor/main-db-sanitized-prod
-#      name: database
       auth:
         username: $DOCKER_USER
         password: $DOCKER_PASS
 
 jobs:
   setup:
-    <<: *tests
+    <<: *setup
     parallelism: 1
     steps:
       - checkout
 
-      - run:
-          name: Install mysql client
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y mysql-client dnsutils
+#      - run:
+#          name: Install mysql client
+#          command: |
+#            sudo apt-get update
+#            sudo apt-get install -y mysql-client dnsutils
 
-      - run:
-          name: Install php mysql extension
-          command: |
-            sudo docker-php-ext-install pdo_mysql
-
-      - run:
-          name: Copy parameters.yml
-          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
+#      - run:
+#          name: Install php mysql extension
+#          command: |
+#            sudo docker-php-ext-install pdo_mysql
 
       - run:
           name: Run composer self-update
@@ -57,6 +48,10 @@ jobs:
             - v1-vendors-
 
       - run:
+          name: Copy parameters.yml
+          command: cp .circleci/parameters.yml.dist app/config/parameters.yml
+
+      - run:
           name: Run composer install
           command: composer install -n --prefer-dist
 
@@ -65,22 +60,22 @@ jobs:
           paths:
             - ./vendor
 
-      - run:
-          name: Check if symfony is ok
-          command: php bin/symfony_requirements
-
-      - run:
-          name: Check php modules
-          command: php -m
+#      - run:
+#          name: Check if symfony is ok
+#          command: php bin/symfony_requirements
+#
+#      - run:
+#          name: Check php modules
+#          command: php -m
 
       - run:
           name: Wait for db
           command: dockerize -wait tcp://$DB_HOST:3306 -timeout 1m
 
-      - run:
-          name: Check mysql user table
-          command: |
-            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST --protocol=TCP mysql -e "SELECT User, Host FROM user;"
+#      - run:
+#          name: Check mysql user table
+#          command: |
+#            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST --protocol=TCP mysql -e "SELECT User, Host FROM user;"
 
 #      - run:
 #          name: Check mysql connection
