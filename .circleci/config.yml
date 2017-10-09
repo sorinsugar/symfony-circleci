@@ -74,17 +74,19 @@ jobs:
           name: Wait for db
           command: dockerize -wait tcp://$DB_HOST:3306 -timeout 1m
 
+#      - run:
+#          name: Install mysql client
+#          command: |
+#            sudo apt-get update
+#            sudo apt-get install -y mysql-client
+
       - run:
           name: Install php mysql extension
           command: |
             sudo docker-php-ext-install pdo_mysql
 
       - run:
-          name: Check parameters file
-          command: cat app/config/parameters.yml
-
-      - run:
-          name: Run database create
+          name: Run create database
           command: php bin/console -n doctrine:database:create
 
       - run:
