@@ -112,7 +112,7 @@ jobs:
           command: |
             ls -al
             docker build -t sorinsugar/simfony-circleci:$CIRCLE_SHA1 .
-            docker tag -f sorinsugar/simfony-circleci:$CIRCLE_SHA1 sorinsugar/simfony-circleci:latest
+            docker tag sorinsugar/simfony-circleci:$CIRCLE_SHA1 sorinsugar/simfony-circleci:latest
 
       - run:
           name: Push  docker image
