@@ -106,6 +106,7 @@ jobs:
       - run:
           name: Sed a nes line
           command: |
+            ls -al
             sed -i '' -e "90s/.*/ \$hasPath = isset(\$params['path']);print_r(\$params); /" vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
             cat vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
 
