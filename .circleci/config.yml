@@ -112,7 +112,7 @@ jobs:
             ls -al vendor/doctrine/doctrine-bundle
             ls -al vendor/doctrine/doctrine-bundle/Command
 
-            sudo sed -i '' -e "90s/.*/ \$hasPath = isset(\$params['path']);print_r(\$params); /" vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
+            sudo sed -i vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php -e "90s/.*/ \$hasPath = isset(\$params['path']);print_r(\$params); /"
             cat vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
 
       - run:
