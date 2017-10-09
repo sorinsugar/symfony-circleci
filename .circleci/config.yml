@@ -104,6 +104,12 @@ jobs:
 #            mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -P $DB_PORT --protocol=TCP mysql -e "show tables;"
 
       - run:
+          name: Sed a nes line
+          command: |
+            sed "/'$hasPath = isset($params[\'path\']);'/a 'print_r($params);'" < vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
+            cat vendor/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php
+
+      - run:
           name: Create database
           command: php bin/console -n -vvv doctrine:database:create
 
