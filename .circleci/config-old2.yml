@@ -4,7 +4,7 @@ version: 2
 defaults: &setup
   working_directory: ~/symfony-circleci
   docker:
-    - image: vouchedfor/symfony-base
+    - image: circleci/php:7.0-fpm-browsers
 
 # Tests variable
 defaults: &tests
